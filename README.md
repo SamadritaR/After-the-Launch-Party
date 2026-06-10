@@ -65,6 +65,24 @@ User side signals carry 45 percent of the weight, because a feature has to be us
 
 Thirty features is a pattern study, not a statistical model, so the findings are directional regularities rather than laws, and they are presented that way. A good deal of enterprise evidence is company reported and is flagged as such throughout. The scores rest on a transparent rubric and documented judgment, which is exactly what makes them arguable, and that is the point.
 
+
+## Method
+
+Each feature is scored on five signals: usage evidence, user sentiment, company conviction, competitive response, and strategic signal. User side evidence carries 45 percent of the weight, a deliberate correction against company side signals, since a company's own conviction is the easiest thing to fake. The data confirms the call: conviction came in nearly flat across all thirty features, the weakest discriminator, while usage evidence showed the widest spread. Three calibration anchors fixed the scale before scoring began, and a transparent rule treated missing data as evidence rather than skipping it. One score was revised upward late, once a full year of evidence showed the feature had recovered, and that reversal is documented.
+
+The framework, weighting, and scoring decisions are the author's own. Evidence gathering and a first pass of scoring were handled by an AI research assistant, directed and reviewed against the rubric. Every contestable call is documented so the reasoning can be checked.
+
+## Limitations
+
+Thirty features is a pattern study, not a statistical model, so the findings are directional rather than laws. Much of the enterprise evidence is company reported and flagged as such. The scores rest on a transparent rubric and documented judgment, which is what makes them arguable, and that is the point.
+## Limitations
+
+Thirty features is a pattern study, not a statistical model, so the findings are directional regularities rather than laws, and they are presented that way. A good deal of enterprise evidence is company reported and is flagged as such throughout. The scores rest on a transparent rubric and documented judgment, which is exactly what makes them arguable, and that is the point.
+
+## Author
+
+Samadrita Roy Chowdhury &middot; [Portfolio](https://samadrita-roy-portfolio.vercel.app/)
+
 ## Author
 
 Samadrita Roy Chowdhury &middot; [Portfolio](https://samadrita-roy-portfolio.vercel.app/)
