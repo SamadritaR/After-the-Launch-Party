@@ -1,103 +1,46 @@
 # After the Launch Party
+### What happened to 30 flagship AI features one year after launch
 
-**A research project scoring the one year survival of 30 flagship AI features across 30 companies.**
+A product and business intelligence case study. Thirty flagship AI features, fifteen from AI native companies and fifteen from established software companies, each scored on how well it survived its first year, with the patterns that separate the survivors from the quietly faded.
 
-When a major AI feature launches, coverage is loud and immediate. A year later, the conversation has moved on. This project goes back to ask the question the launch coverage never answers: did the feature actually work? Is it still shipping, still used, still strategically central, or did it quietly fade?
+## The headline finding
 
-Across 15 AI native companies and 15 traditional SaaS companies, this study tracks one flagship feature each, scores its one year survival on a structured rubric, and synthesizes the patterns into a playbook for product teams shipping AI today.
+Company conviction is almost flat across all thirty features, averaging 8.9 out of 10. Almost every company is deeply committed to its flagship AI feature, which means conviction predicts almost nothing about whether the feature lasts. What actually separates the survivors from the faded is real usage and whether competitors bothered to copy the feature, both signals the company does not control. The market decides, not the roadmap.
 
----
+## What is inside
 
-## Why this project exists
+* **The case study report** &middot; `After_the_Launch_Party_Playbook.pdf` &mdash; the full report: the method in plain terms, the survival scoreboard, the evidence based analysis, seven plays for shipping AI that lasts, a prediction framework, and a scored dossier for every feature.
+* **The interactive dashboard** &middot; [live demo](ADD_YOUR_HOSTED_URL) &mdash; a self contained web page to explore the scores, filter by company type, audience and pricing, and drill into any feature. Source file in this repo: `After_the_Launch_Party_Dashboard.html`.
+* **The scored dataset** &middot; `scoring_dataset.csv` &mdash; all thirty features, the five signal scores, the weighted total, and a one line reading each. The single source of truth behind both the report and the dashboard.
+* **The scoring rubric** &middot; `scoring_rubric.pdf` &mdash; the five signals, their weights, and the rules used to score.
 
-AI feature launches in 2024 and 2025 followed a predictable arc. A keynote, a wave of press, a flood of demos on social, then silence. What gets lost in that pattern is the question that actually matters to anyone building product: which of these features earned their place, and which were launch theater?
+## Results at a glance
 
-This project answers that question with evidence, not opinion. Public reviews, changelogs, earnings call mentions, pricing changes, and product positioning, scored against a consistent rubric so the comparisons hold up.
+* 30 features scored, average survival score 7.8 out of 10, range 4.6 to 9.3.
+* Highest: Salesforce Agentforce (9.3), Cursor Composer (9.2), Harvey Assistant (9.1).
+* Lowest: Character.ai (4.6), Figma AI (5.5), Jasper AI Agents (6.0).
+* Features priced to a customer outcome averaged 8.7, the highest of any pricing model. Flat per seat pricing averaged 7.5, the lowest.
+* AI native features averaged 7.99 and established software features averaged 7.66. Being AI native was not a moat.
+* Across the full year, not one of the thirty features stayed dead or paused. Companies retool their flagship bets rather than kill them.
 
-The output is a playbook, not a critique. The goal is to identify what made the survivors survive, so product teams shipping their next AI feature have something better than vibes to plan against.
+## How features were scored
 
----
+Each feature is rated 0 to 10 on five signals, then combined into one survival score.
 
-## How the study is structured
+| Signal | Weight | The question it answers |
+| --- | --- | --- |
+| Usage evidence | 25% | Do people actually use it? |
+| User sentiment | 20% | Do the people who use it like it? |
+| Company conviction | 20% | Is the company still investing in it? |
+| Competitive response | 15% | Did competitors copy it? |
+| Strategic signal | 20% | Is it central to the company's future? |
 
-**Two cohorts, fifteen features each.**
+The user side signals carry 45 percent of the weight, because a feature has to be used and not just promoted. The window is roughly twelve months after launch, with a partial window flag for very recent features. Where a signal had no public evidence, usage and sentiment were scored low, since silence on the user side is itself a signal, while conviction and strategic signal were set aside and the remaining signals reweighted. Evidence provenance is noted throughout, and company reported figures are flagged as such.
 
-*AI native companies* are organizations whose entire product is built around AI. Their flagship feature is often the product itself, or its most strategically important surface. Examples in this cohort include OpenAI, Anthropic, Perplexity, Cursor, Harvey, Replit, and Granola.
+## A note on method
 
-*Traditional SaaS companies* are established software companies that added AI to an existing product. Their flagship feature is typically the most important AI bet they made on top of the core platform. Examples in this cohort include Notion, Slack, Salesforce, HubSpot, Figma, Canva, Atlassian, and Dropbox.
-
-The split exists because the two groups face different survival pressures. AI native companies live or die by their AI feature working. Traditional SaaS companies have a base business that buffers them, but face a different question: did the AI feature actually change anything, or was it a press release with a toggle attached?
-
-**One flagship feature per company.**
-
-For each company, the study selects a single flagship feature. The selection prioritizes strategic centrality over novelty. The feature scored is the one the company is most clearly betting on, not the one that got the most launch buzz.
-
-**A consistent scoring rubric, applied uniformly.**
-
-Every feature is scored against the same rubric across multiple dimensions of survival. The rubric is documented separately and is itself a deliverable of the project.
-
----
-
-## Methodology
-
-**Evidence sources.** Public reviews on G2 and Reddit, official changelogs and product release notes, earnings call transcripts, pricing page changes, public roadmap commitments, press coverage, and case studies. No private data, no insider sources, no speculation.
-
-**Source citation.** Every claim that affects scoring is cited. The full citation list per feature is part of the deliverable so any reader can verify the reasoning.
-
-**Opinion labeling.** Where the analysis interprets evidence rather than reports it, the interpretation is labeled as such. This keeps the analytical layer honest and separable from the underlying facts.
-
-**Product focus, not personnel.** The study scores features and product decisions, not the people who shipped them. This is both a credibility choice and a legal one.
-
-**Scoring transparency.** Every score includes the reasoning that produced it. A reader who disagrees with a score can see exactly which evidence drove it and form their own view.
-
----
-
-## Repository structure
-
-```
-/reference         Company and flagship feature reference docs
-/rubric            The scoring rubric and its documentation
-/scoring           Per feature scoring sheets with evidence and reasoning
-/synthesis         Cross feature pattern analysis and the playbook writeup
-/sources           Citation index per feature
-```
-
----
-
-## What you can do with this
-
-**If you ship AI features:** Read the synthesis section first. The playbook is built for you.
-
-**If you cover AI as a journalist or analyst:** The per feature scoring sheets are the most concentrated source of evidence on these launches a year later that I'm aware of in one place. Cite freely.
-
-**If you're a recruiter or hiring manager evaluating this work:** The scoring sheets show how I reason from evidence to judgment. The synthesis section shows how I move from individual cases to general patterns. The methodology section shows how I think about epistemic discipline in research.
-
----
-
-## Roadmap
-
-This is a 14 day build. The plan moves through scoping, rubric construction, scoring, synthesis, and publication.
-
-| Phase | Days | Output |
-|---|---|---|
-| Scoping | 1 | Company and feature reference docs |
-| Rubric | 2 to 3 | Scoring rubric and dimension definitions |
-| Scoring | 4 to 10 | All 30 features scored with evidence |
-| Synthesis | 11 to 13 | Cross feature patterns and playbook draft |
-| Publication | 14 | Final repo state and public writeup |
-
-The repository is updated as each phase completes.
-
----
-
-## A note on framing
-
-This project is a playbook builder, not a neutral tracker and not a critic's takedown. The goal is to learn what worked, what didn't, and why, in a form that's useful to people building product.
-
-That framing matters because it changes the scoring. A neutral tracker measures activity. A critic looks for failure. A playbook builder looks for causation: not just "did it survive" but "what about the survivors made them survive."
-
----
+Scoring was driven by an AI assistant and reviewed by the author, a deliberate trade of independent research effort for speed and consistency. Every judgment call, including the three calibration anchors and the one feature whose score was revised on fresh evidence, is documented in the methodology section of the report.
 
 ## Author
 
-Built by Sam as a portfolio project to demonstrate research, scoring, and synthesis work on AI products. Feedback and corrections are welcome via issues.
+Samadrita Roy Chowdhury &middot; [Portfolio](https://samadrita-roy-portfolio.vercel.app/)
