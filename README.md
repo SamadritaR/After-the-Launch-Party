@@ -10,7 +10,7 @@ Company conviction is almost flat across all thirty features, averaging 8.9 out 
 ## What is inside
 
 * **The case study report** &middot; `After_the_Launch_Party_Playbook.pdf` &mdash; the full report: the method in plain terms, the survival scoreboard, the evidence based analysis, seven plays for shipping AI that lasts, a prediction framework, and a scored dossier for every feature.
-* **The interactive dashboard** &middot; [live demo](ADD_YOUR_HOSTED_URL) &mdash; a self contained web page to explore the scores, filter by company type, audience and pricing, and drill into any feature. Source file in this repo: `After_the_Launch_Party_Dashboard.html`.
+* **The interactive dashboard** &middot; [live demo](https://samadritar.github.io/After-the-Launch-Party/) &mdash; a self contained web page to explore the scores, filter by company type, audience and pricing, and drill into any feature. Source file in this repo: `After_the_Launch_Party_Dashboard.html`.
 * **The scored dataset** &middot; `scoring_dataset.csv` &mdash; all thirty features, the five signal scores, the weighted total, and a one line reading each. The single source of truth behind both the report and the dashboard.
 * **The scoring rubric** &middot; `scoring_rubric.pdf` &mdash; the five signals, their weights, and the rules used to score.
 
