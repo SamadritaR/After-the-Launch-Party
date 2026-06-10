@@ -1,0 +1,276 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>After the Launch Party — Survival Dashboard</title>
+<style>
+:root{
+  --ink:#15201f; --muted:#5d6b6a; --faint:#8a9897; --line:#e6ecea; --line2:#eef2f1;
+  --bg:#f4f7f6; --card:#ffffff; --accent:#0f6e6e;
+  --survivor:#0f8a6e; --solid:#3a86c8; --contested:#d99100; --regressed:#c0504d;
+  --shadow:0 1px 2px rgba(20,40,38,.06),0 4px 14px rgba(20,40,38,.05);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:24px;height:62px}
+.brand{font-weight:700;font-size:15px;letter-spacing:-.01em}
+.brand b{color:var(--accent)}
+.brand span{display:block;font-weight:400;font-size:11px;color:var(--faint);letter-spacing:.02em}
+.tabs{display:flex;gap:4px;margin-left:8px}
+.tab{border:none;background:none;font:inherit;font-size:13px;font-weight:600;color:var(--muted);
+  padding:8px 14px;border-radius:8px;cursor:pointer}
+.tab:hover{background:#eef3f2;color:var(--ink)}
+.tab.on{background:var(--accent);color:#fff}
+.top .right{margin-left:auto;font-size:12px;color:var(--faint);text-align:right}
+.top .right a{color:var(--accent);font-weight:600}
+
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+.kpi .n{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--accent)}
+.kpi .l{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.35}
+
+/* section heading */
+.sec-h{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700;margin:6px 0 2px}
+.sec-t{font-size:20px;font-weight:700;letter-spacing:-.01em;margin:0 0 14px}
+
+/* filters */
+.filters{display:flex;flex-wrap:wrap;gap:18px;background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:14px 18px;box-shadow:var(--shadow);margin-bottom:18px;align-items:center}
+.fg{display:flex;align-items:center;gap:8px}
+.fg .lab{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:700}
+.pill{border:1px solid var(--line);background:#fff;color:var(--muted);font:inherit;font-size:12.5px;
+  padding:5px 12px;border-radius:999px;cursor:pointer;font-weight:600}
+.pill:hover{border-color:#b9cbc8}
+.pill.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.reset{margin-left:auto;font-size:12px;color:var(--muted);cursor:pointer;border:none;background:none;font-weight:600}
+.reset:hover{color:var(--accent)}
+
+/* layout */
+.layout{display:grid;grid-template-columns:1.45fr 1fr;gap:18px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.board{padding:14px 18px 18px}
+.board .hd{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.board .hd .cnt{font-size:12px;color:var(--faint)}
+.row{display:flex;align-items:center;gap:12px;padding:7px 8px;border-radius:9px;cursor:pointer;transition:background .12s}
+.row:hover{background:#f3f7f6}
+.row.sel{background:#eaf4f1;box-shadow:inset 3px 0 0 var(--accent)}
+.row .nm{width:190px;font-size:12.5px;font-weight:600;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .nm small{display:block;font-weight:400;color:var(--faint);font-size:11px}
+.track{flex:1;background:#eef1f0;height:16px;border-radius:5px;overflow:hidden}
+.fill{height:100%;border-radius:5px;width:0;transition:width .6s cubic-bezier(.2,.7,.2,1)}
+.sc{width:30px;text-align:right;font-weight:700;font-size:13px;flex:none}
+.b-survivor{background:var(--survivor)} .t-survivor{color:var(--survivor)}
+.b-solid{background:var(--solid)} .t-solid{color:var(--solid)}
+.b-contested{background:var(--contested)} .t-contested{color:var(--contested)}
+.b-regressed{background:var(--regressed)} .t-regressed{color:var(--regressed)}
+.legend{display:flex;gap:16px;font-size:11.5px;color:var(--muted);margin-top:12px;flex-wrap:wrap}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
+
+/* detail */
+.detail{padding:18px 20px;position:sticky;top:80px}
+.detail .dnm{font-size:17px;font-weight:700;letter-spacing:-.01em}
+.detail .dmeta{font-size:12px;color:var(--faint);margin-top:2px}
+.detail .dband{display:inline-block;margin-top:10px;font-size:12px;font-weight:700;color:#fff;padding:3px 10px;border-radius:999px}
+.detail .dscore{float:right;font-size:30px;font-weight:700;letter-spacing:-.02em}
+.detail .dscore small{font-size:13px;color:var(--faint);font-weight:600}
+.sigrow{margin:13px 0 0}
+.sigrow .top{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px}
+.sigrow .top .l{color:var(--muted);font-weight:600}
+.sigrow .top .v{font-weight:700}
+.sigrow .mtrack{background:#eef1f0;height:7px;border-radius:4px;overflow:hidden}
+.sigrow .mfill{height:100%;background:var(--accent);border-radius:4px;width:0;transition:width .5s ease}
+.sigrow .note{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.4}
+.reading{margin-top:16px;background:#f4f7f6;border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+  padding:11px 14px;font-size:12.5px;color:#27403e}
+.reading b{color:var(--ink)}
+
+/* analysis */
+.agrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.achart{padding:18px 20px}
+.achart h3{font-size:15px;margin:0 0 3px}
+.achart p.cap{font-size:12px;color:var(--muted);margin:0 0 14px}
+.abar{display:flex;align-items:center;gap:10px;margin:9px 0}
+.abar .al{width:140px;font-size:12px;color:var(--muted);flex:none;text-align:right;font-weight:600}
+.abar .at{flex:1;background:#eef1f0;height:18px;border-radius:5px;overflow:hidden}
+.abar .af{height:100%;border-radius:5px;background:var(--accent);width:0;transition:width .7s cubic-bezier(.2,.7,.2,1)}
+.abar .av{width:34px;font-size:12.5px;font-weight:700;flex:none}
+.note-card{padding:16px 20px;font-size:12.5px;color:var(--muted);line-height:1.55}
+.note-card b{color:var(--ink)}
+.hide{display:none}
+.foot{color:var(--faint);font-size:11.5px;text-align:center;margin:26px 0 36px;line-height:1.6}
+@media(max-width:880px){.kpis{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.agrid{grid-template-columns:1fr}.detail{position:static}.row .nm{width:150px}}
+</style></head>
+<body>
+<div class="top"><div class="wrap">
+  <div class="brand">After the Launch Party <b>·</b> Survival Dashboard<span>30 flagship AI features, one year after launch</span></div>
+  <div class="tabs">
+    <button class="tab on" data-view="board">Scoreboard</button>
+    <button class="tab" data-view="analysis">Analysis</button>
+  </div>
+  <div class="right">Samadrita Roy Chowdhury<br><a href="https://samadrita-roy-portfolio.vercel.app/" target="_blank">Portfolio</a></div>
+</div></div>
+
+<div class="wrap">
+  <div class="kpis" id="kpis"></div>
+
+  <div id="view-board">
+    <div class="filters" id="filters"></div>
+    <div class="layout">
+      <div class="card board">
+        <div class="hd"><div class="sec-t" style="margin:0">Survival scoreboard</div><div class="cnt" id="cnt"></div></div>
+        <div id="rows"></div>
+        <div class="legend">
+          <span><span class="dot b-survivor"></span>Survivor (8.5+)</span>
+          <span><span class="dot b-solid"></span>Solid (7.0&ndash;8.4)</span>
+          <span><span class="dot b-contested"></span>Contested (5.5&ndash;6.9)</span>
+          <span><span class="dot b-regressed"></span>Regressed (&lt;5.5)</span>
+        </div>
+      </div>
+      <div class="card detail" id="detail"></div>
+    </div>
+  </div>
+
+  <div id="view-analysis" class="hide">
+    <div class="sec-h">The analysis</div>
+    <div class="sec-t">What separated the survivors from the faded</div>
+    <div class="agrid">
+      <div class="card achart">
+        <h3>Which signal divides winners from laggards</h3>
+        <p class="cap">Gap between the top ten and bottom ten features on each signal. Bigger means more discriminating.</p>
+        <div id="ch-gaps"></div>
+      </div>
+      <div class="card achart">
+        <h3>Pricing model versus survival</h3>
+        <p class="cap">Average survival score by how the feature is priced. Outcome pricing leads.</p>
+        <div id="ch-pricing"></div>
+      </div>
+    </div>
+    <div class="agrid" style="margin-top:18px">
+      <div class="card achart">
+        <h3>AI native versus incumbent</h3>
+        <p class="cap">Average survival score by company type. The gap is small.</p>
+        <div id="ch-cohort"></div>
+      </div>
+      <div class="card note-card">
+        <b>The reading.</b> Company conviction is almost flat across the whole set (average 8.9 out of 10), so it predicts nothing about survival. The two signals that actually separate winners from the faded are real usage and whether competitors copied the feature, both signals the company does not control. Pricing tied to a customer outcome outscored every other model, and being an AI native startup proved to be no moat over established software companies. The full reasoning behind every score sits in the case study report.
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">Built from a single scored dataset of 30 features across 5 weighted signals · Companion to the case study report · Samadrita Roy Chowdhury</div>
+</div>
+
+<script>
+const DATA = [{"id": 1, "feature": "ChatGPT Memory", "company": "OpenAI", "cohort": "AI native", "launch": "2024-02", "partial": false, "userbase": "Both", "pricing": "Bundled into a plan", "pricing_raw": "Bundled freemium", "u": 9.0, "se": 7.0, "co": 10.0, "cr": 9.5, "st": 9.5, "score": 9.0, "verdict": "Strong survivor", "insight": "Became infrastructure other features depend on; re architected in 2026. Switching cost protects it.", "notes": ["Rolled out to free users in 2025; an independent measure put about 73 percent of ChatGPT Atlas sessions as memory enabled (single source).", "Broadly useful, though some power users dislike it building a profile of them.", "OpenAI rebuilt the memory engine in 2026 and doubled capacity, which companies do not do for dead features.", "Memory became table stakes; nearly every rival assistant shipped its own version.", "It is the foundation that Projects, Study Mode and the new browser rely on."]}, {"id": 2, "feature": "Claude Artifacts", "company": "Anthropic", "cohort": "AI native", "launch": "2024-06", "partial": false, "userbase": "Both", "pricing": "Bundled into a plan", "pricing_raw": "Bundled", "u": 7.0, "se": 7.5, "co": 9.5, "cr": 9.0, "st": 9.0, "score": 8.3, "verdict": "Strong survivor", "insight": "Held the category versus Canvas by deepening the mechanism. Direct feature usage data is thin.", "notes": ["Generally available on all paid plans and inside Projects; precise feature level usage is not public, so it is scored on its own evidence.", "Widely described as turning chat into interactive mini apps, though the evidence is indirect.", "Two years of added capability: saved state, embedded live AI, and data connected artifacts.", "Created the pattern; OpenAI and Google shipped their own canvas versions in response.", "A core, visible part of what Claude is."]}, {"id": 3, "feature": "Perplexity Deep Research", "company": "Perplexity", "cohort": "AI native", "launch": "2025-02", "partial": false, "userbase": "Both", "pricing": "Freemium", "pricing_raw": "Freemium", "u": 8.0, "se": 7.5, "co": 9.0, "cr": 9.0, "st": 9.0, "score": 8.5, "verdict": "Strong survivor", "insight": "Defined the deep research category; rivals all shipped their own version.", "notes": ["A core mode of a product serving tens of millions, used heavily by researchers and analysts.", "Praised for structured, cited reports, with the caution that AI research still needs human checking.", "Continuous upgrades through 2026, including faster models and newer reasoning engines.", "Touched off a wave; the major labs all shipped their own deep research modes.", "The feature that justifies the paid tier and the research assistant positioning."]}, {"id": 4, "feature": "Glean Assistant", "company": "Glean", "cohort": "AI native", "launch": "2024-06", "partial": false, "userbase": "Enterprise", "pricing": "Flat per seat", "pricing_raw": "Per seat", "u": 9.0, "se": 8.0, "co": 9.5, "cr": 8.5, "st": 9.5, "score": 8.9, "verdict": "Strong survivor", "insight": "Reached 300M ARR by May 2026; Fortune 500 count nearly doubled. ROI is partly soft per analysts.", "notes": ["300M in yearly revenue by May 2026, roughly triple in 15 months, with Fortune 500 count nearly doubling.", "Strong analyst and customer recognition; the honest caveat is that time saved is hard to tie to headcount.", "Constant platform investment: a new agent engine, a third generation assistant, model choice.", "A reference point in the AI for work race, though it fights Microsoft and Google head on.", "The assistant is the company."]}, {"id": 5, "feature": "Cursor Composer", "company": "Cursor (Anysphere)", "cohort": "AI native", "launch": "2024-11", "partial": false, "userbase": "Both", "pricing": "Usage based", "pricing_raw": "Usage based", "u": 9.5, "se": 7.5, "co": 10.0, "cr": 9.5, "st": 9.5, "score": 9.2, "verdict": "Strong survivor", "insight": "Fastest scaling business software ever; built its own model. A 2025 pricing change angered users.", "notes": ["Over 2B in yearly revenue, more than a million paying users, present in most of the Fortune 1000.", "Developers largely love it, but a 2025 pricing change caused real anger and a rollback.", "Built its own model and kept shipping agent features; the clearest commitment in the set.", "Forced the whole coding category to respond, from GitHub to Claude Code.", "The agent is the company's entire thesis that the editor is now a fallback."]}, {"id": 6, "feature": "Harvey Assistant", "company": "Harvey", "cohort": "AI native", "launch": "2023", "partial": false, "userbase": "Enterprise", "pricing": "Flat per seat", "pricing_raw": "Per seat", "u": 9.5, "se": 8.0, "co": 9.5, "cr": 8.5, "st": 9.5, "score": 9.1, "verdict": "Strong survivor", "insight": "142k+ lawyers; half the top 100 US firms; seat count doubles within 12 months.", "notes": ["142,000+ lawyers, half the top 100 US firms, and seat counts that double within a year.", "Strong adoption at demanding firms; reviews note both real strengths and the accuracy bar legal work demands.", "Over 1.2B raised, expanding agents and embedded engineering teams inside client firms.", "The blueprint others such as Legora and CoCounsel are measured against.", "The assistant is the core of a fast growing vertical AI company."]}, {"id": 7, "feature": "Jasper AI Agents Platform", "company": "Jasper", "cohort": "AI native", "launch": "2024", "partial": false, "userbase": "Enterprise", "pricing": "Flat per seat", "pricing_raw": "Per seat", "u": 5.5, "se": 5.5, "co": 7.0, "cr": 5.0, "st": 7.0, "score": 6.0, "verdict": "Contested survivor", "insight": "Pivot committed but unproven; no public revenue wins; commoditization pressure still visible.", "notes": ["Real users report time savings, but there are no public revenue numbers and some call it a dressed up free tool.", "Mixed; Brand Voice is praised, output quality and why not just ChatGPT are recurring complaints.", "The company did fully commit to the agent platform rebrand and publishes annual research.", "More the one responding to commoditization than the one others respond to.", "The agent platform is the survival bet against commoditized AI writing."]}, {"id": 8, "feature": "Writer AI Studio", "company": "Writer", "cohort": "AI native", "launch": "2024", "partial": false, "userbase": "Enterprise", "pricing": "Flat per seat", "pricing_raw": "Per seat", "u": 5.5, "se": 5.0, "co": 8.0, "cr": 5.5, "st": 8.0, "score": 6.4, "verdict": "Quiet bet", "insight": "Strong conviction and strategic investors; almost no independent user side proof.", "notes": ["Concrete enterprise proof points, but the numbers are almost all the company's own.", "Almost no independent user voice, which is itself a signal on a sales led product.", "Strong and clear: continued platform investment and backing from Salesforce and Adobe venture arms.", "A differentiated niche player rather than a category setter.", "The platform is the whole strategy."]}, {"id": 9, "feature": "Gamma AI Generator", "company": "Gamma", "cohort": "AI native", "launch": "2022", "partial": false, "userbase": "Both", "pricing": "Freemium", "pricing_raw": "Freemium", "u": 9.5, "se": 7.5, "co": 9.0, "cr": 8.5, "st": 9.0, "score": 8.8, "verdict": "Strong survivor", "insight": "70M users; 102M ARR; profitable. Rival Tome exited. PowerPoint export weakness persists.", "notes": ["70M users, 102M in yearly revenue, profitable, more than a million new creations a day.", "Loved for fast on brand decks; the persistent complaint is broken PowerPoint export and a price rise.", "A major 3.0 release and an AI design agent kept the product moving.", "Held the native AI deck category as a direct rival shut its slides product.", "The describe and get a deck flow is the reason people sign up."]}, {"id": 10, "feature": "Descript Underlord", "company": "Descript", "cohort": "AI native", "launch": "2025-04", "partial": false, "userbase": "Both", "pricing": "Usage based", "pricing_raw": "Usage based", "u": 6.5, "se": 7.5, "co": 8.0, "cr": 6.5, "st": 8.0, "score": 7.3, "verdict": "Solid survivor", "insight": "Strong reviews for its niche; no hard numbers; not built for cinematic work.", "notes": ["No hard numbers, but consistent reviewer use and real time savings for podcasters and talking head video.", "Positive within its niche, with honest limits on cinematic and effects heavy work.", "Continued investment, including a model picker and new generation features.", "A named, marketable agent to compete with CapCut, Runway and newer editors.", "The agent is the bet to stay relevant as AI video tools multiply."]}, {"id": 11, "feature": "Runway Gen-3 Alpha", "company": "Runway", "cohort": "AI native", "launch": "2024-06", "partial": false, "userbase": "Both", "pricing": "Usage based", "pricing_raw": "Usage based", "u": 7.0, "se": 7.0, "co": 9.0, "cr": 8.0, "st": 9.0, "score": 8.0, "verdict": "Survivor in a crowded field", "insight": "Shipped first and stayed top tier (Gen-4 then 4.5) but Google Veo is now called the leader.", "notes": ["Still used as the lower cost workhorse while the Gen-4 line serves higher end work; no public revenue figures.", "Respected by agencies and filmmakers, with the credit based cost a common gripe.", "A rapid succession of newer models shows the line is a priority.", "Set a quality bar the field chased, but now faces intense pressure from Google and others.", "Video generation is the company."]}, {"id": 12, "feature": "ElevenLabs Conversational AI", "company": "ElevenLabs", "cohort": "AI native", "launch": "2024", "partial": false, "userbase": "Both", "pricing": "Usage based", "pricing_raw": "Usage based", "u": 9.0, "se": 8.0, "co": 9.5, "cr": 8.5, "st": 9.5, "score": 8.9, "verdict": "Strong survivor", "insight": "500M+ ARR by April 2026 driven by voice agents; rebranded the whole company around it.", "notes": ["Crossed 500M in yearly revenue by early 2026, with growth explicitly attributed to enterprise voice agents.", "Voices regarded as the most human; strong developer and enterprise enthusiasm.", "A relentless shipping pace and a full company rebrand around agents.", "A leader in the hot voice agent wave, with partnerships such as IBM.", "Conversational AI is now the explicit growth engine."]}, {"id": 13, "feature": "Character.ai core chat", "company": "Character.ai", "cohort": "AI native", "launch": "2022", "partial": false, "userbase": "Consumer", "pricing": "Freemium", "pricing_raw": "Freemium", "u": 4.5, "se": 3.5, "co": 5.5, "cr": 5.0, "st": 4.5, "score": 4.6, "verdict": "Regressed", "insight": "Cautionary tale; under 18 open chat removed Nov 2025 under legal and regulatory pressure.", "notes": ["Still a large consumer app, but removing open ended chat for under 18 users cut off its most engaged audience.", "Damaged by a safety crisis and by complaints that characters felt duller after model changes.", "Investing in survival and safety, but it stepped back from the original flagship rather than doubling down.", "Pioneered consumer companionship, but is now more a cautionary tale than a reference.", "The core experience persists but its standing is impaired by legal and regulatory pressure."]}, {"id": 14, "feature": "Replit Agent", "company": "Replit", "cohort": "AI native", "launch": "2024-09", "partial": false, "userbase": "Both", "pricing": "Usage based", "pricing_raw": "Usage based", "u": 9.5, "se": 7.0, "co": 10.0, "cr": 8.5, "st": 9.5, "score": 9.0, "verdict": "Strong survivor", "insight": "Took ARR from a 2.8M plateau to roughly 525M; reliability incidents are a real risk.", "notes": ["Took the company's revenue from a flat 2.8M to roughly 525M, with 50M+ users and most of the Fortune 500 present.", "Strong enthusiasm for letting non engineers build apps, tempered by real reliability incidents.", "Total; the company repositioned entirely around the agent and shipped successive versions.", "Defined the AI builds apps for non engineers lane against Lovable, Bolt and others.", "The agent is the company's whole strategy."]}, {"id": 15, "feature": "Granola Spaces", "company": "Granola", "cohort": "AI native", "launch": "2025-05", "partial": true, "userbase": "Enterprise", "pricing": "Flat per seat", "pricing_raw": "Per seat", "u": 7.5, "se": 7.0, "co": 9.0, "cr": 6.5, "st": 9.0, "score": 7.9, "verdict": "Promising but young", "insight": "Enterprise pivot working (250 percent quarterly growth) but the Spaces brand is new (March 2026).", "notes": ["Strong enterprise momentum (250 percent quarterly growth, marquee logos) but the Spaces brand itself is only months old.", "The product is well liked for its no bot approach; the specific feature is too new for deep sentiment.", "The entire enterprise pivot and a 1.5B valuation are built on it.", "Differentiated, but meeting notes are commoditizing, which is what Spaces is meant to escape.", "It is the bet that justifies the valuation."]}, {"id": 16, "feature": "Notion Q&A", "company": "Notion", "cohort": "Traditional SaaS", "launch": "2023-11", "partial": false, "userbase": "Both", "pricing": "Bundled into a plan", "pricing_raw": "Bundled", "u": 8.0, "se": 7.5, "co": 9.0, "cr": 7.0, "st": 8.5, "score": 8.1, "verdict": "Strong survivor", "insight": "AI use tripled after bundling into the Business plan (single source); core to the agent platform.", "notes": ["AI use tripled after Notion bundled it into the Business plan (single source); the install base is over 100M.", "Praised as the strongest part of Notion's AI, with honest limits on large workspaces and file reading.", "A steady march to autonomous agents and enterprise search built on the Q&A layer.", "A strong implementation of the ask your workspace pattern rather than its inventor.", "Central to the shift from where knowledge is stored to where it is used."]}, {"id": 17, "feature": "Slack AI", "company": "Slack (Salesforce)", "cohort": "Traditional SaaS", "launch": "2024-02", "partial": false, "userbase": "Both", "pricing": "Bundled into a plan", "pricing_raw": "Bundled", "u": 7.0, "se": 6.5, "co": 9.0, "cr": 6.5, "st": 8.5, "score": 7.5, "verdict": "Solid survivor", "insight": "Killed the clean paid add on; bundled AI to drive tier upgrades; now central to Agentforce delivery.", "notes": ["Basic AI now reaches all paid plans; the strongest internal proof is Salesforce's own near universal staff use (vendor source).", "Useful, but forcing customers off the standalone add on into pricier tiers annoyed some.", "Thirty new AI features in early 2026 and deep wiring into the Agentforce strategy.", "A necessary answer to Microsoft Teams and Copilot rather than a category setter.", "Slack is now a delivery surface for Salesforce's agents."]}, {"id": 18, "feature": "Asana AI Studio", "company": "Asana", "cohort": "Traditional SaaS", "launch": "2024", "partial": false, "userbase": "Enterprise", "pricing": "Usage based", "pricing_raw": "Usage based", "u": 6.0, "se": 5.5, "co": 8.0, "cr": 5.5, "st": 7.0, "score": 6.2, "verdict": "Calibration anchor (holds)", "insight": "AI Studio ARR doubling each quarter but tiny in absolute terms; a real bet, still early and small.", "notes": ["AI Studio revenue is doubling each quarter but remains tiny in absolute terms, with small case studies.", "Limited independent voice; positive but vendor sourced outcomes.", "High; AI Studio and the coming AI Teammates are the multiproduct bet.", "A follower in AI work management against Monday, ClickUp and Notion.", "The platform's whole future is staked on it."]}, {"id": 19, "feature": "Linear Agents", "company": "Linear", "cohort": "Traditional SaaS", "launch": "2025", "partial": true, "userbase": "Both", "pricing": "Flat per seat", "pricing_raw": "Per seat", "u": 6.0, "se": 7.0, "co": 8.0, "cr": 6.0, "st": 7.5, "score": 6.9, "verdict": "Disciplined but early", "insight": "Ship less ship better; full agent in beta March 2026; loved brand, thin public metrics.", "notes": ["Qualitative; a reported large cut in time spent filing issues (partner source), with the full agent in beta.", "Linear's design discipline is beloved, and the restrained AI reads as mature.", "A clear issue tracking is dead repositioning around five AI pillars.", "Praised for restraint, but not forcing the category.", "Agents are central to the AI should reduce friction thesis."]}, {"id": 20, "feature": "Figma AI (Make Designs / First Draft)", "company": "Figma", "cohort": "Traditional SaaS", "launch": "2024-06", "partial": false, "userbase": "Both", "pricing": "Bundled into a plan", "pricing_raw": "Bundled", "u": 5.5, "se": 5.0, "co": 8.0, "cr": 5.5, "st": 7.0, "score": 5.5, "verdict": "Recovered (was 2.0 anchor)", "insight": "Paused in 2024 then relaunched as First Draft and folded into the Figma agent. Pending your call.", "notes": ["The specific generate a screen feature is still positioned as early exploration, not a headline used feature.", "It carries the reputational scar of the 2024 pause; designers remain lukewarm on full generation.", "High; Figma relaunched it as First Draft and folded it into a new design agent rather than killing it.", "Catch up work in a field it once stumbled in publicly.", "Part of the design to code agent future."]}, {"id": 21, "feature": "Canva Magic Studio", "company": "Canva", "cohort": "Traditional SaaS", "launch": "2023-10", "partial": false, "userbase": "Both", "pricing": "Freemium", "pricing_raw": "Freemium", "u": 9.5, "se": 7.5, "co": 9.5, "cr": 8.5, "st": 9.0, "score": 8.9, "verdict": "Strong survivor", "insight": "AI tools used 10B+ times; one feature hit 9M uses in a month. Non designers adopted and stayed.", "notes": ["Canva's AI tools have been used over 10 billion times and one new feature hit 9M uses in a month.", "Loved for fast on brand marketing output; called template native for high end creative.", "A 2026 release built on Canva's own design model shows deep investment.", "A category defining consumer rollout that both led and responded to rivals.", "Central to converting free users to Pro."]}, {"id": 22, "feature": "HubSpot Breeze", "company": "HubSpot", "cohort": "Traditional SaaS", "launch": "2024-09", "partial": false, "userbase": "Both", "pricing": "Priced to an outcome", "pricing_raw": "Value aligned (outcome)", "u": 7.5, "se": 7.0, "co": 9.0, "cr": 7.0, "st": 8.5, "score": 7.8, "verdict": "Solid survivor", "insight": "Quantified customer outcomes; moved to pay per result pricing. Breeze Intelligence brand retired.", "notes": ["Published customer outcomes such as large hour savings, and its own support resolving a third of tickets with it.", "Positive for small and mid sized teams; minor friction from a retired sub brand and credit costs.", "Breeze is HubSpot's entire AI brand, now on pay per result pricing.", "HubSpot's answer to Agentforce at the smaller end of the market.", "The central AI consolidation bet."]}, {"id": 23, "feature": "Salesforce Agentforce", "company": "Salesforce", "cohort": "Traditional SaaS", "launch": "2024-09", "partial": false, "userbase": "Enterprise", "pricing": "Priced to an outcome", "pricing_raw": "Value aligned (outcome)", "u": 9.5, "se": 7.5, "co": 10.0, "cr": 9.5, "st": 10.0, "score": 9.3, "verdict": "Strong survivor", "insight": "SEC verified: Agentforce ARR went from 500M+ to roughly 2.9B; 9,500+ paid deals. Best evidence in the set.", "notes": ["Audited filings show Agentforce revenue going from over 500M to billions with thousands of paid deals, plus an 84 percent resolution rate on its own support.", "Strong enterprise conversion from pilots to production, against broad market skepticism about agent ROI.", "The entire company go to market, with executive pay tied to its revenue.", "Defined the enterprise agent category that everyone now answers.", "It is Salesforce's whole AI story."]}, {"id": 24, "feature": "Zoom AI Companion", "company": "Zoom", "cohort": "Traditional SaaS", "launch": "2023-09", "partial": false, "userbase": "Both", "pricing": "Bundled into a plan", "pricing_raw": "Bundled", "u": 8.5, "se": 7.5, "co": 9.0, "cr": 7.5, "st": 8.5, "score": 8.3, "verdict": "Strong survivor", "insight": "Free bundling drove real adoption (AI users up 40 percent in a quarter); monetized weakly, so a retention win.", "notes": ["Hundreds of thousands of accounts and millions of summaries; AI users grew 40 percent in a single quarter.", "Liked for being free and zero setup; pricing volatility is a mild negative.", "A 3.0 release with agentic features and supporting acquisitions.", "Free bundling pressured paid rivals and matched Teams and Meet.", "The thread tying the beyond meetings strategy together."]}, {"id": 25, "feature": "Intercom Fin AI Agent", "company": "Intercom", "cohort": "Traditional SaaS", "launch": "2023-03", "partial": false, "userbase": "Both", "pricing": "Priced to an outcome", "pricing_raw": "Value aligned (outcome)", "u": 9.5, "se": 7.5, "co": 9.5, "cr": 9.5, "st": 9.5, "score": 9.0, "verdict": "Calibration anchor (holds)", "insight": "Fin passed 100M ARR; revenue retention jumped from 112 to 146 percent on outcome pricing.", "notes": ["Passed 100M in yearly revenue across roughly 8,000 businesses, with 40M+ resolved conversations.", "The pay per resolution model is admired, though some call the bill expensive and cheaper rivals exist.", "The company rebuilt itself around AI first support and took on debt to fund it.", "Set the reference for outcome priced AI support that Zendesk, Ada and others answer.", "Fin is the whole strategy."]}, {"id": 26, "feature": "Atlassian Rovo", "company": "Atlassian", "cohort": "Traditional SaaS", "launch": "2024-04", "partial": false, "userbase": "Enterprise", "pricing": "Bundled into a plan", "pricing_raw": "Bundled", "u": 8.5, "se": 7.5, "co": 9.0, "cr": 7.5, "st": 8.5, "score": 8.3, "verdict": "Strong survivor", "insight": "5M monthly users (audited); search usage up 100x; a free tier drives adoption.", "notes": ["Five million monthly users (audited), with search usage up a hundredfold and thousands of agents built.", "Most users say it beats the search they had before; analysts watch for licensed but idle shelfware.", "Bundled into Collections with a free tier to drive adoption, plus continuous expansion.", "Atlassian's entry in the AI across your work race, with an interoperability angle.", "Central to the System of Work strategy."]}, {"id": 27, "feature": "Airtable AI", "company": "Airtable", "cohort": "Traditional SaaS", "launch": "2024-03", "partial": false, "userbase": "Both", "pricing": "Usage based", "pricing_raw": "Usage based", "u": 7.0, "se": 6.5, "co": 9.0, "cr": 6.5, "st": 8.5, "score": 7.5, "verdict": "Solid survivor", "insight": "Bet the turnaround on AI (Omni, Superagent); Cobuilder its fastest adopted feature; stats mostly vendor.", "notes": ["Cobuilder was the fastest adopted feature in Airtable's history; broader stats are mostly the company's own.", "Liked for getting non technical users started, with an honest ceiling on complex needs and external data.", "Very high; Airtable rebuilt itself AI native with new standalone products and an acquisition.", "A differentiated structured data angle, also defending against commoditization.", "AI is the entire repositioning after a hard stretch."]}, {"id": 28, "feature": "Miro AI (Intelligent Canvas)", "company": "Miro", "cohort": "Traditional SaaS", "launch": "2024", "partial": false, "userbase": "Both", "pricing": "Usage based", "pricing_raw": "Usage based", "u": 5.5, "se": 6.0, "co": 8.0, "cr": 5.5, "st": 7.5, "score": 6.5, "verdict": "Improving but thin", "insight": "Weakest evidence SaaS entry; investing more now but verifiable adoption is still scarce.", "notes": ["The thinnest evidence of any SaaS entry; mostly announcements and roadmap, with the newest features in beta.", "Limited independent voice; positive directory style reviews.", "Clearly increased, with an AI canvas, workflows and shared AI workspaces.", "Keeping pace with FigJam, Mural and others rather than leading.", "The AI canvas is central to the multiproduct repositioning."]}, {"id": 29, "feature": "Grammarly Generative AI Suite", "company": "Grammarly (Superhuman)", "cohort": "Traditional SaaS", "launch": "2023-04", "partial": false, "userbase": "Both", "pricing": "Freemium", "pricing_raw": "Freemium", "u": 7.5, "se": 7.0, "co": 9.5, "cr": 6.5, "st": 9.0, "score": 8.0, "verdict": "Strong survivor", "insight": "The writing AI became the bridge to a full company reinvention (rebrand to Superhuman, two acquisitions).", "notes": ["Embedded across roughly a million apps with a very large install base; feature specific numbers are not broken out.", "Broadly trusted, with a lingering question of whether people use the generation features or just the grammar.", "The company bet its entire identity on it, rebranding to Superhuman and acquiring two companies.", "A defensive move against ChatGPT that now competes in the cross app assistant space.", "The generative suite is the bridge that justified the whole reinvention."]}, {"id": 30, "feature": "Dropbox Dash", "company": "Dropbox", "cohort": "Traditional SaaS", "launch": "2023", "partial": false, "userbase": "Both", "pricing": "Flat per seat", "pricing_raw": "Per seat", "u": 5.5, "se": 6.0, "co": 9.5, "cr": 5.5, "st": 9.0, "score": 7.1, "verdict": "Show me bet", "insight": "Bet the company narrative on Dash but it is explicitly pre monetization; core revenue is flat.", "notes": ["Available to 575,000 paying businesses with positive early response, but no disclosed metrics and explicitly pre revenue.", "Early customer response reported as positive (vendor); little independent sentiment yet.", "Maximum; Dropbox is betting the company's narrative on Dash with acquisitions and marketing.", "A repositioning entry against Glean and Microsoft rather than a category setter.", "It is the entire turnaround bet."]}];
+const AN = {"gaps": [{"label": "Usage evidence", "gap": 3.6}, {"label": "Competitive response", "gap": 3.2}, {"label": "Strategic signal", "gap": 2.0}, {"label": "User sentiment", "gap": 1.8}, {"label": "Company conviction", "gap": 1.8}], "pricing": [{"label": "Priced to an outcome", "avg": 8.7, "n": 3}, {"label": "Bundled into a plan", "avg": 7.9, "n": 7}, {"label": "Freemium", "avg": 7.8, "n": 5}, {"label": "Usage based", "avg": 7.8, "n": 8}, {"label": "Flat per seat", "avg": 7.5, "n": 7}], "cohort": [{"label": "AI native", "avg": 7.99, "n": 15}, {"label": "Traditional SaaS", "avg": 7.66, "n": 15}], "mean": 7.8, "conv": 8.9, "lo": 4.6, "hi": 9.3, "n": 30};
+let state={cohort:"All",userbase:"All",pricing:"All",selected:DATA[0].id};
+
+function band(s){return s>=8.5?"survivor":s>=7?"solid":s>=5.5?"contested":"regressed";}
+function bandLabel(s){return s>=8.5?"Survivor":s>=7?"Solid survivor":s>=5.5?"Contested":"Regressed";}
+
+function filtered(){
+  return DATA.filter(d=>
+    (state.cohort==="All"||d.cohort===state.cohort)&&
+    (state.userbase==="All"||d.userbase===state.userbase)&&
+    (state.pricing==="All"||d.pricing===state.pricing)
+  ).sort((a,b)=>b.score-a.score);
+}
+
+function renderKpis(){
+  const f=filtered();
+  const mean=f.length?(f.reduce((s,d)=>s+d.score,0)/f.length):0;
+  const conv=f.length?(f.reduce((s,d)=>s+d.co,0)/f.length):0;
+  const lo=f.length?Math.min(...f.map(d=>d.score)):0, hi=f.length?Math.max(...f.map(d=>d.score)):0;
+  document.getElementById("kpis").innerHTML=`
+   <div class="kpi"><div class="n">${f.length}</div><div class="l">Features in view${f.length!==30?" (filtered from 30)":""}</div></div>
+   <div class="kpi"><div class="n">${mean.toFixed(1)}</div><div class="l">Average survival score, out of 10</div></div>
+   <div class="kpi"><div class="n">${conv.toFixed(1)}</div><div class="l">Average company conviction, nearly flat across the set</div></div>
+   <div class="kpi"><div class="n">${lo.toFixed(1)}&ndash;${hi.toFixed(1)}</div><div class="l">Score range. Nothing in the full set fully died</div></div>`;
+}
+
+function renderFilters(){
+  const defs=[
+    ["cohort","Company",["All","AI native","Traditional SaaS"]],
+    ["userbase","Audience",["All","Consumer","Enterprise","Both"]],
+    ["pricing","Pricing",["All","Priced to an outcome","Usage based","Bundled into a plan","Freemium","Flat per seat"]],
+  ];
+  let h="";
+  defs.forEach(([key,lab,opts])=>{
+    h+=`<div class="fg"><span class="lab">${lab}</span>`;
+    opts.forEach(o=>{h+=`<button class="pill ${state[key]===o?"on":""}" data-key="${key}" data-val="${o}">${o}</button>`;});
+    h+="</div>";
+  });
+  h+=`<button class="reset" id="reset">Reset filters</button>`;
+  const el=document.getElementById("filters"); el.innerHTML=h;
+  el.querySelectorAll(".pill").forEach(b=>b.onclick=()=>{state[b.dataset.key]=b.dataset.val;renderAll();});
+  document.getElementById("reset").onclick=()=>{state.cohort="All";state.userbase="All";state.pricing="All";renderAll();};
+}
+
+function renderRows(){
+  const f=filtered();
+  document.getElementById("cnt").textContent=f.length+" of 30 features";
+  let h="";
+  f.forEach(d=>{
+    const bd=band(d.score);
+    h+=`<div class="row ${d.id===state.selected?"sel":""}" data-id="${d.id}">
+      <div class="nm">${d.feature}<small>${d.company}</small></div>
+      <div class="track"><div class="fill b-${bd}" data-w="${d.score*10}"></div></div>
+      <div class="sc t-${bd}">${d.score.toFixed(1)}</div></div>`;
+  });
+  const rows=document.getElementById("rows"); rows.innerHTML=h;
+  rows.querySelectorAll(".row").forEach(r=>r.onclick=()=>{state.selected=+r.dataset.id;renderRows();renderDetail();});
+  requestAnimationFrame(()=>rows.querySelectorAll(".fill").forEach(fl=>fl.style.width=fl.dataset.w+"%"));
+}
+
+function renderDetail(){
+  const d=DATA.find(x=>x.id===state.selected); const bd=band(d.score);
+  const labels=["Usage evidence (25%)","User sentiment (20%)","Company conviction (20%)","Competitive response (15%)","Strategic signal (20%)"];
+  const vals=[d.u,d.se,d.co,d.cr,d.st];
+  let sig="";
+  for(let i=0;i<5;i++){
+    sig+=`<div class="sigrow"><div class="top"><span class="l">${labels[i]}</span><span class="v">${vals[i].toFixed(1)}</span></div>
+      <div class="mtrack"><div class="mfill" data-w="${vals[i]*10}"></div></div>
+      <div class="note">${d.notes[i]}</div></div>`;
+  }
+  document.getElementById("detail").innerHTML=`
+    <div class="dscore t-${bd}">${d.score.toFixed(1)}<small>/10</small></div>
+    <div class="dnm">${d.feature}</div>
+    <div class="dmeta">${d.company} · ${d.cohort} · launched ${d.launch}${d.partial?" · partial window":""}</div>
+    <div class="dband b-${bd}">${bandLabel(d.score)}</div>
+    ${sig}
+    <div class="reading"><b>Reading.</b> ${d.insight}</div>`;
+  requestAnimationFrame(()=>document.querySelectorAll("#detail .mfill").forEach(fl=>fl.style.width=fl.dataset.w+"%"));
+}
+
+function abar(label,val,max,color){
+  return `<div class="abar"><div class="al">${label}</div><div class="at"><div class="af" style="background:${color}" data-w="${(val/max)*100}"></div></div><div class="av">${val}</div></div>`;
+}
+function renderAnalysis(){
+  const C={s:"#0f8a6e"};
+  let g=""; AN.gaps.forEach(x=>g+=abar(x.label,x.gap,4,"#0f6e6e")); document.getElementById("ch-gaps").innerHTML=g;
+  let p=""; AN.pricing.forEach(x=>p+=abar(x.label+" ("+x.n+")",x.avg,10,"#0f8a6e")); document.getElementById("ch-pricing").innerHTML=p;
+  let c=""; AN.cohort.forEach(x=>c+=abar(x.label+" ("+x.n+")",x.avg,10,"#3a86c8")); document.getElementById("ch-cohort").innerHTML=c;
+  requestAnimationFrame(()=>document.querySelectorAll(".af").forEach(fl=>fl.style.width=fl.dataset.w+"%"));
+}
+
+function renderAll(){renderKpis();renderFilters();renderRows();renderDetail();}
+
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on")); t.classList.add("on");
+  const v=t.dataset.view;
+  document.getElementById("view-board").classList.toggle("hide",v!=="board");
+  document.getElementById("view-analysis").classList.toggle("hide",v!=="analysis");
+  document.getElementById("kpis").classList.toggle("hide",v!=="board");
+  if(v==="analysis")renderAnalysis();
+});
+
+renderAll();
+</script>
+</body></html>
