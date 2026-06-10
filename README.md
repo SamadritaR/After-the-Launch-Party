@@ -37,10 +37,6 @@ Each feature is rated 0 to 10 on five signals, then combined into one survival s
 
 The user side signals carry 45 percent of the weight, because a feature has to be used and not just promoted. The window is roughly twelve months after launch, with a partial window flag for very recent features. Where a signal had no public evidence, usage and sentiment were scored low, since silence on the user side is itself a signal, while conviction and strategic signal were set aside and the remaining signals reweighted. Evidence provenance is noted throughout, and company reported figures are flagged as such.
 
-## A note on method
-
-Scoring was driven by an AI assistant and reviewed by the author, a deliberate trade of independent research effort for speed and consistency. Every judgment call, including the three calibration anchors and the one feature whose score was revised on fresh evidence, is documented in the methodology section of the report.
-
 ## Author
 
 Samadrita Roy Chowdhury &middot; [Portfolio](https://samadrita-roy-portfolio.vercel.app/)
