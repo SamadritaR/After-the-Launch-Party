@@ -17,7 +17,7 @@ I wanted to answer a question most launch coverage never returns to: a year late
 
 ## What the data says
 
-![The survival scoreboard: 30 flagship AI features ranked by one year survival score](scoreboard.png)
+<img width="1609" height="1941" alt="scoreboard" src="https://github.com/user-attachments/assets/2bfdf528-199d-4e91-8c5b-4ddd85f65151" />
 
 * 30 features scored, average survival score 7.8 out of 10, range 4.6 to 9.3.
 * Highest: Salesforce Agentforce (9.3), Cursor Composer (9.2), Harvey Assistant (9.1). Lowest: Character.ai (4.6), Figma AI (5.5), Jasper AI Agents (6.0).
@@ -55,8 +55,6 @@ Each feature is rated 0 to 10 on five signals, then combined into one survival s
 | Company conviction | 20% | Is the company still investing in it? |
 | Competitive response | 15% | Did competitors copy it? |
 | Strategic signal | 20% | Is it central to the company's future? |
-
-<img width="1609" height="1941" alt="scoreboard" src="https://github.com/user-attachments/assets/2bfdf528-199d-4e91-8c5b-4ddd85f65151" />
 
 
 User side signals carry 45 percent of the weight, because a feature has to be used and not just promoted. The window is roughly twelve months after launch, with a partial window flag for very recent features. Where a signal had no public evidence, usage and sentiment were scored low, since silence on the user side is itself a signal, while conviction and strategic signal were set aside and the rest reweighted.
