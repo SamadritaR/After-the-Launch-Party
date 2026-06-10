@@ -74,9 +74,6 @@ The framework, weighting, and scoring decisions are the author's own. Evidence g
 
 ## Limitations
 
-Thirty features is a pattern study, not a statistical model, so the findings are directional rather than laws. Much of the enterprise evidence is company reported and flagged as such. The scores rest on a transparent rubric and documented judgment, which is what makes them arguable, and that is the point.
-## Limitations
-
 Thirty features is a pattern study, not a statistical model, so the findings are directional regularities rather than laws, and they are presented that way. A good deal of enterprise evidence is company reported and is flagged as such throughout. The scores rest on a transparent rubric and documented judgment, which is exactly what makes them arguable, and that is the point.
 
 ## Author
