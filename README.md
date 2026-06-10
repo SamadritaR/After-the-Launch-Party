@@ -61,10 +61,6 @@ Each feature is rated 0 to 10 on five signals, then combined into one survival s
 
 User side signals carry 45 percent of the weight, because a feature has to be used and not just promoted. The window is roughly twelve months after launch, with a partial window flag for very recent features. Where a signal had no public evidence, usage and sentiment were scored low, since silence on the user side is itself a signal, while conviction and strategic signal were set aside and the rest reweighted.
 
-## What I designed, and how it was built
-
-The value of a study like this lives in the decisions behind the numbers, and those decisions are mine. I designed the evaluation framework: the five signals, the deliberate 45 percent weight on user side evidence, the missing data rule, the three calibration anchors that fix the scale, and the one year window. I made the judgment calls, including revising one feature's score once the full year of evidence showed it had recovered, and documenting why. An AI research assistant executed the per feature evidence gathering and the first pass scoring within that framework, which I directed and reviewed. The framework, the standards, and every contestable decision are documented in the report so anyone can check them. I would rather be transparent about the method than pretend the research was done by hand.
-
 ## Limitations
 
 Thirty features is a pattern study, not a statistical model, so the findings are directional regularities rather than laws, and they are presented that way. A good deal of enterprise evidence is company reported and is flagged as such throughout. The scores rest on a transparent rubric and documented judgment, which is exactly what makes them arguable, and that is the point.
