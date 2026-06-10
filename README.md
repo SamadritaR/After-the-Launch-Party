@@ -79,7 +79,3 @@ Thirty features is a pattern study, not a statistical model, so the findings are
 ## Author
 
 Samadrita Roy Chowdhury &middot; [Portfolio](https://samadrita-roy-portfolio.vercel.app/)
-
-## Author
-
-Samadrita Roy Chowdhury &middot; [Portfolio](https://samadrita-roy-portfolio.vercel.app/)
