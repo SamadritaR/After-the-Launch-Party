@@ -61,11 +61,6 @@ Each feature is rated 0 to 10 on five signals, then combined into one survival s
 
 User side signals carry 45 percent of the weight, because a feature has to be used and not just promoted. The window is roughly twelve months after launch, with a partial window flag for very recent features. Where a signal had no public evidence, usage and sentiment were scored low, since silence on the user side is itself a signal, while conviction and strategic signal were set aside and the rest reweighted.
 
-## Limitations
-
-Thirty features is a pattern study, not a statistical model, so the findings are directional regularities rather than laws, and they are presented that way. A good deal of enterprise evidence is company reported and is flagged as such throughout. The scores rest on a transparent rubric and documented judgment, which is exactly what makes them arguable, and that is the point.
-
-
 ## Method
 
 Each feature is scored on five signals: usage evidence, user sentiment, company conviction, competitive response, and strategic signal. User side evidence carries 45 percent of the weight, a deliberate correction against company side signals, since a company's own conviction is the easiest thing to fake. The data confirms the call: conviction came in nearly flat across all thirty features, the weakest discriminator, while usage evidence showed the widest spread. Three calibration anchors fixed the scale before scoring began, and a transparent rule treated missing data as evidence rather than skipping it. One score was revised upward late, once a full year of evidence showed the feature had recovered, and that reversal is documented.
